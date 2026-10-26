@@ -48,7 +48,34 @@ label{display:block;font-size:.9rem;font-weight:650;margin-bottom:7px}input[type
   </section>
 </main>
 <footer>WardVoice · Karura Ward, Westlands Constituency, Nairobi County<br>Independent opinion poll · Not an official election</footer>
-<script>
+<script> 
+  const SUPABASE_URL = 'https://xygqjujwldmrclxlhafs.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_bKnKWStvwjCj8opzyOHZVA_EK9FbTUt';
+
+async function loadCandidates() {
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/poll_candidates?select=id,name,display_name&active=eq.true&order=id.asc`,
+      {
+        headers: {
+          apikey: SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.status}`);
+    }
+
+    const candidates = await response.json();
+    console.log('Candidates from Supabase:', candidates);
+  } catch (error) {
+    console.error('Could not load candidates:', error);
+  }
+}
+
+loadCandidates();
 const options=[...document.querySelectorAll('.candidate')];let chosen='';
 const consent=document.getElementById('consent'),submit=document.getElementById('submit'),status=document.getElementById('status');
 function update(){submit.disabled=!(chosen&&consent.checked)}

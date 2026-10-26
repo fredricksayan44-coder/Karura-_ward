@@ -69,11 +69,23 @@ async function loadCandidates() {
     }
 
     const candidates = await response.json();
-    console.log('Candidates from Supabase:', candidates);
-  } catch (error) {
-    console.error('Could not load candidates:', error);
-  }
+const buttons = [...document.querySelectorAll('.candidate')];
+
+if (buttons.length !== candidates.length) {
+  throw new Error(
+    `Found ${buttons.length} buttons but ${candidates.length} database records.`
+  );
 }
+
+candidates.forEach((candidate, index) => {
+  const button = buttons[index];
+  const label = candidate.display_name || candidate.name;
+
+  button.dataset.name = candidate.name;
+  button.textContent = label;
+});
+
+console.log('Candidates loaded:', candidates);
 
 loadCandidates();
 const options=[...document.querySelectorAll('.candidate')];let chosen='';
